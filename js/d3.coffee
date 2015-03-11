@@ -1,15 +1,20 @@
-sum = (o) -> o.reduce((a,b) -> a+b)
-dist = (a, b) ->
-    Math.sqrt(sum(if b then Math.pow(ai - b[i], 2) else Math.pow(ai, 2) for ai, i in a))
-isempty = (o) -> Object.keys(o).length is 0
+abs = (n) -> Math.abs(n)
+min = (n...) -> Math.min(n...)
+max = (n...) -> Math.max(n...)
+pow = (n, p) -> Math.pow(n, p)
+sqr = (n) -> Math.pow(n, 2)
+sqrt = (n) -> Math.sqrt(n)
+sum = (o) -> if o.length then o.reduce((a,b) -> a+b) else ""
+dist = (a, b) -> sqrt(sum(sqr(ai - (if b then b[i] else 0)) for ai, i in a))
 print = (o) -> console.log(o)
-abs = (a) -> Math.abs(a)
+
 
 s = new tacit.Structure
 new s.Beam({x: 0, y: 0}, {x: 1, y: 1})
 new s.Beam({x: 1, y: 1}, {x: 2, y: 0})
 s.nodeList[i].fixed[dim] = true for i in [0,2] for dim in ["x", "y"]
 s.nodeList[1].force.y = -1
+
 
 showgrad = document.getElementById("grad")
 showforce = document.getElementById("force")
@@ -124,7 +129,7 @@ d3.select(window).on("keydown", keydown)
 
 prevobj = 0
 reposition = ->
-    s.solveSizing()
+    s.solve()
     #print [2 - s.beamList[0].L*s.beamList[1].L/s.nodeList[1].y/s.nodeList[1].y, s.nodeList[1].grad.y]
     drag_line.attr("stroke-width", 10/scale)
              .attr("stroke-dasharray", 10/scale+","+10/scale)
@@ -150,7 +155,7 @@ reposition = ->
         .attr("y1", (d) -> d.y).attr("y2", (d) -> d.y - 50/scale*d.grad.y*nodes.length/s.lp.obj)
         .attr("stroke-width", (d) -> if 50/scale*dist(l for d, l of d.grad)*nodes.length/s.lp.obj > 0.05 then 10/scale*showgrad.checked else 0)
 repositionfast = ->
-    s.solveSizing()
+    s.solve()
     drag_line.attr("stroke-width", 10/scale)
            .attr("stroke-dasharray", 10/scale+","+10/scale)
     link.attr("x1", (d) -> d.source.x).attr("x2", (d) -> d.target.x)
@@ -179,15 +184,13 @@ repositionzoom = ->
 @repositionzoom = repositionzoom
 
 # set inital window
-mins = {}
-maxs = {}
-means = {}
+[mins, maxs, means] = [{}, {}, {}]
 for d in ["x", "y", "z"]
     list = (n[d] for n in nodes)
-    mins[d] = Math.min(list...)
-    maxs[d] = Math.max(list...)
+    mins[d] = min(list...)
+    maxs[d] = max(list...)
     means[d] = sum(list)/nodes.length
-scale = 0.5*Math.min(width/(maxs.x-mins.x), height/(maxs.y-mins.y))
+scale = 0.5*min(width/(maxs.x-mins.x), height/(maxs.y-mins.y))
 translate = [scale*means.x, height/2 - scale*means.y]
 zoomer.scale(scale)
 zoomer.translate(translate)
