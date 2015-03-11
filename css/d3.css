@@ -1,0 +1,48 @@
+.node {
+  fill: #3d3130;
+  cursor: move;
+}
+
+.node_selected {
+  fill: #807ec7;
+}
+
+.drag_line {
+  stroke: #9c7b70;
+  pointer-events: none;
+}
+
+.drag_line_hidden {
+  stroke: #9c7b70;
+  stroke-width: 0;
+  pointer-events: none;
+}
+
+.link {
+  stroke: #9c7b70;
+  cursor: move;
+}
+
+.compression {
+    stroke: #f15a5e;
+}
+
+.tension {
+    stroke: #2eabe2;
+}
+
+.link_selected {
+  stroke: #807ec7;
+}
+
+.force {
+  stroke: #3d3130;
+}
+
+.grad {
+  stroke: #807ec7;
+}
+
+rect {
+    cursor: crosshair;
+}
