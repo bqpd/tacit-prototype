@@ -41,15 +41,14 @@ mousedown = -> if not mousedown_node and not mousedown_link # if nothing is sele
     vis.call(d3.behavior.zoom().on("zoom"), rescale)        # allow panning
 
 mousemove = -> if mousedown_node
+    [mx, my] = d3.svg.mouse(this)
     if move.checked
-        mousedown_node.x =  d3.svg.mouse(this)[0]
-        mousedown_node.y =  d3.svg.mouse(this)[1]
-        beam.update() for beam in mousedown_node.sourced.concat(mousedown_node.targeted)
+        mousedown_node.moveto(x: mx, y: my)
         repositionfast()
     else
         drag_line
-            .attr("x1", mousedown_node.x).attr("x2", d3.svg.mouse(this)[0])
-            .attr("y1", mousedown_node.y).attr("y2", d3.svg.mouse(this)[1])
+            .attr("x1", mousedown_node.x).attr("x2", mx)
+            .attr("y1", mousedown_node.y).attr("y2", my)
 
 mouseup = ->
     if mousedown_node

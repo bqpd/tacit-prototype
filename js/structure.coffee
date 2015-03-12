@@ -29,13 +29,17 @@ gen_classes = (nodeLookup, nodeIDLookup, nodeList, beamList, nodes, beams) ->
                 nodeLookup[@x][@y][@z] = @id
             nodeIDLookup[@id] = this
             nodeList.push(this)
+        moveto: (pos) ->
+            delta = {}
+            (if pos[d]? then delta[d] = pos[d] - this[d]) for d in "xyz"
+            @move(delta)
         move: (delta) ->
             # cleanup nodeLookup
             delete nodeLookup[@x][@y][@z]
-            if isempty nodeLookup[@x][@y] then delete nodeLookup[@x][@y]
-            if isempty nodeLookup[@x] then delete nodeLookup[@x]
+            if delta.y? and isempty nodeLookup[@x][@y] then delete nodeLookup[@x][@y]
+            if delta.x? and isempty nodeLookup[@x] then delete nodeLookup[@x]
             # apply changes
-            (if delta[d]? then this[d] += delta[d]) for d in ["x", "y", "z"]
+            (if delta[d]? then this[d] += delta[d]) for d in "xyz"
             beam.update() for beam in @sourced.concat(@targeted)
             # reenter into nodeLookup
             nodeLookup[@x] ?= {}
@@ -86,7 +90,7 @@ gen_classes = (nodeLookup, nodeIDLookup, nodeList, beamList, nodes, beams) ->
             @target.targeted.push(this)
             beamList.push(this)
         update: ->
-            @l[d] = @target[d] - @source[d] for d in ["x", "y", "z"]
+            @l[d] = @target[d] - @source[d] for d in "xyz"
             @L = dist(l for d, l of @l)
         delete: ->
             for list in [@source.sourced, @target.targeted, beamList]
@@ -154,14 +158,14 @@ class Structure
         for beam in @beamList
             beam.f = @lp["f#{beam.id}"]
             beam.F = abs(beam.f)
-            for dim in ["x", "y", "z"]
+            for dim in "xyz"
                 rho = beam.f/beam.L
                 geo = 1-2*Math.pow(beam.l[dim]/beam.L, 2)
                 sdual = @lp["n#{beam.source.id}#{dim}"] or 0
                 tdual = @lp["n#{beam.target.id}#{dim}"] or 0
                 beam.grad[dim] = rho*geo*(sdual - tdual)
         for node in @nodeList
-            for dim in ["x", "y", "z"]
+            for dim in "xyz"
                 node.grad[dim]  = sum(beam.grad[dim] for beam in node.sourced)
                 node.grad[dim] -= sum(beam.grad[dim] for beam in node.targeted)
 
