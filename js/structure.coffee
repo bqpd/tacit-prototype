@@ -76,9 +76,9 @@ gen_classes = (nodeLookup, nodeIDLookup, nodeList, beamList, nodes, beams) ->
             [@source, @target] = (nodeIDLookup[getNodeIDX(pt)] for pt in pts)
             # determine physical characteristics
             @f = 0
+            @F = 0
             @l = {}
             @update()
-            @diameter = null
             @grad = {x: 0, y: 0, z: 0}
             # add to start and end nodes, and the list
             @id = beams++
@@ -152,8 +152,8 @@ class Structure
     solve: ->
         @lp = @solveLP()
         for beam in @beamList
-            beam.diameter = Math.pow(@lp["F#{beam.id}"], 0.5)
             beam.f = @lp["f#{beam.id}"]
+            beam.F = abs(beam.f)
             for dim in ["x", "y", "z"]
                 rho = beam.f/beam.L
                 geo = 1-2*Math.pow(beam.l[dim]/beam.L, 2)
