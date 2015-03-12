@@ -15,6 +15,8 @@ new s.Beam({x: 1, y: 1}, {x: 2, y: 0})
 s.nodeList[i].fixed[dim] = true for i in [0,2] for dim in ["x", "y"]
 s.nodeList[1].force.y = -1
 
+@tacit.d3struct = s
+
 
 showgrad = document.getElementById("grad")
 showforce = document.getElementById("force")

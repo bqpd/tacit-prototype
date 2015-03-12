@@ -1,6 +1,6 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title> structure.js </title>
+  <title> tacit.js </title>
   <script type="text/javascript" src="lib/coffeescript.min.js"></script>
   <script type="text/javascript" src="lib/glpk.min.js"></script>
   <script type="text/javascript" src="lib/d3.v2.min.js"></script>
@@ -52,9 +52,9 @@
     <button onclick="deleteAllBeams();"><strong>Delete all beams</strong></button> <br>
     <button onclick="connectAllNodes();"><strong>Connect all nodes</strong></button> <br>
     <strong> show (f)orces</strong>
-        <input type="checkbox" id="force" checked><br>
+        <input type="checkbox" id="force" checked onclick="reposition();"><br>
         <strong> show (g)radients</strong>
-            <input type="checkbox" id="grad" checked><br>
+            <input type="checkbox" id="grad" checked onclick="reposition();"><br>
     <strong> show unused (b)eams</strong>
         <input type="checkbox" id="showzero" checked onclick="reposition();"><br>
     <strong> allow moving (n)odes</strong>
